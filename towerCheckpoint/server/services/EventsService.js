@@ -1,7 +1,14 @@
 import { dbContext } from "../db/DbContext"
 import { BadRequest, Forbidden } from "../utils/Errors"
 
-class EventsService{
+class EventsService {
+    async capacityIncreased(eventId) {
+        const event = await this.getEventById(eventId)
+
+        event.capacity++
+        await event.save()
+        return event
+    }
     async lowerCapacity(eventId) {
         const event = await this.getEventById(eventId)
         if (event.isCanceled) {
@@ -38,7 +45,7 @@ class EventsService{
         eventById.description = eventData.description || eventById.description
 
         await eventById.save()
-        
+
         return eventById
     }
     async getEventById(eventId) {
