@@ -18,8 +18,8 @@
 
   <div class="container">
     <div class="row">
-      <div v-for="event in events" class="col-md-3">
-        {{ event.name }}
+      <div v-for="event in events" class="col-md-3 my-3">
+       <EventCard :event="event" />
       </div>
     </div>
   </div>
@@ -30,30 +30,31 @@ import { onMounted, computed } from 'vue';
 import { eventsService } from '../services/EventsService'
 import { AppState } from '../AppState';
 import Pop from '../utils/Pop';
+import EventCard from '../components/EventCard.vue';
 
 export default {
-  setup() {
-    async function getEvents() {
-      try {
-        await eventsService.getEvents()
-      } catch (error) {
-        Pop.error(error, '[geting events]')
-      }
-    }
-
-    onMounted(() => {
-      getEvents()
-    })
-    
-    return {
-      events: computed(() => AppState.events)
-    }
-  }
+    setup() {
+        async function getEvents() {
+            try {
+                await eventsService.getEvents();
+            }
+            catch (error) {
+                Pop.error(error, "[geting events]");
+            }
+        }
+        onMounted(() => {
+            getEvents();
+        });
+        return {
+            events: computed(() => AppState.events)
+        };
+    },
+    components: { EventCard }
 }
 </script>
 
 <style scoped lang="scss">
-.chairs-pic{
+.chairs-pic {
   background-image: url(chairs.png);
   background-size: cover;
   height: 30vh;
