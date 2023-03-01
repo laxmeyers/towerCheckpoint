@@ -3,7 +3,7 @@ import { defaultSchemaOptions } from "../db/Constants";
 
 export const TicketsSchema = new Schema({
     eventId: { type: Schema.Types.ObjectId, required: true, ref: 'Event' },
-    accountId: {type: Schema.Types.ObjectId, required: true, ref: 'Account'},
+    accountId: { type: Schema.Types.ObjectId, required: true, ref: 'Account' },
 }, defaultSchemaOptions)
 
 TicketsSchema.virtual('profile', {
@@ -19,3 +19,5 @@ TicketsSchema.virtual('event', {
     justOne: true,
     ref: 'Event'
 })
+
+TicketsSchema.index({ eventId: 1, accountId: 1 }, { unique: true })

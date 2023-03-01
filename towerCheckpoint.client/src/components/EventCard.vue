@@ -3,10 +3,14 @@
         <div class="card selectable">
             <img class="same-size rounded" :src="event.coverImg" alt="">
             <div class="card-body text-dark card-height ">
+                <div class="text-limit align-items-center d-flex"><h5 class="fs-5">{{ event.name }}</h5></div>
                 <div class="text-limit">{{ event.description }}</div>
                 <div class="mt-1">{{ new Date(event.startDate).toLocaleDateString() }}</div>
-                <div class="text-end mt-1">
+                <div class="text-end mt-1" v-if="event.capacity > 0">
                     <h5 class="fs-5">Open Seats: {{ event.capacity }}</h5>
+                </div>
+                <div v-else class="text-end">
+                    <h5 class="fs-5">No Open Seats</h5>
                 </div>
             </div>
         </div>
@@ -28,11 +32,6 @@ export default {
 
 <style lang="scss" scoped>
 
-// .card-height{
-//   height: 15vh;
-//   overflow: hidden;
-// }
-
 .text-limit {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -45,4 +44,5 @@ export default {
   height: 25vh;
   object-fit: cover;
 }
+
 </style>

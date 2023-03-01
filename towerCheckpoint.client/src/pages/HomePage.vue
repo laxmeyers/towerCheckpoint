@@ -7,11 +7,11 @@
     </div>
     <div class="row justify-content-center mb-5">
       <div class="col-10 d-flex justify-content-around btn-secondary">
-        <button class="btn text-light">All</button>
-        <button class="btn text-light">Concert</button>
-        <button class="btn text-light">Convention</button>
-        <button class="btn text-light">Sport</button>
-        <button class="btn text-light">Digital</button>
+        <button @click="changeFilterCategory('')" class="btn text-light">All</button>
+        <button @click="changeFilterCategory('concert')" class="btn text-light">Concert</button>
+        <button @click="changeFilterCategory('convention')" class="btn text-light">Convention</button>
+        <button @click="changeFilterCategory('sport')" class="btn text-light">Sport</button>
+        <button @click="changeFilterCategory('digital')" class="btn text-light">Digital</button>
       </div>
     </div>
   </div>
@@ -26,14 +26,15 @@
 </template>
 
 <script>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { eventsService } from '../services/EventsService'
 import { AppState } from '../AppState';
 import Pop from '../utils/Pop';
 import EventCard from '../components/EventCard.vue';
 
 export default {
-    setup() {
+  setup() {
+      const filterCategory = ref('')
         async function getEvents() {
             try {
                 await eventsService.getEvents();
@@ -46,7 +47,18 @@ export default {
             getEvents();
         });
         return {
-            events: computed(() => AppState.events)
+          events: computed(() => {
+            if (!filterCategory.value) {
+              return AppState.events
+            } else {
+              return AppState.events.filter(e => e.type == filterCategory.value)
+            }
+          }),
+          
+
+          changeFilterCategory(category) {
+            filterCategory.value = category
+          }
         };
     },
     components: { EventCard }
