@@ -10,6 +10,7 @@
 <script>
 import { computed } from 'vue'
 import { AppState } from './AppState'
+import Modal from './components/Modal.vue'
 import Navbar from './components/Navbar.vue'
 
 export default {
@@ -18,7 +19,7 @@ export default {
       appState: computed(() => AppState)
     }
   },
-  components: { Navbar }
+  components: { Navbar, Modal }
 }
 </script>
 <style lang="scss">

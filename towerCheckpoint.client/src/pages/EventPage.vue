@@ -16,16 +16,16 @@
               <div class="d-flex h-100 align-items-center">
                 <p>{{ event.description }}</p>
               </div>
-              <div v-if="!event.isCanceled" class="justify-content-end align-items-end d-flex flex-column">
+              <div v-if="event.isCanceled" class="justify-content-end align-items-end d-flex flex-column">
                 <div class="d-flex justify-content-between w-100">
-                  <h5 class="mt-2">{{ event.capacity }} spots left</h5>
-                  <button class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend <i class="mdi mdi-human"></i></button>
+                  <h5 class="mt-2 bg-danger p-2 rounded">Event Is Canceled</h5>
                 </div>
               </div>
-              <div v-else-if="event.capacity > 0 && !eventGoer" class="justify-content-end align-items-end d-flex flex-column">
+              <div v-else-if="event.capacity > 0" class="justify-content-end align-items-end d-flex flex-column">
                 <div class="d-flex justify-content-between w-100">
                   <h5 class="mt-2">{{ event.capacity }} spots left</h5>
-                  <button class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend <i class="mdi mdi-human"></i></button>
+                  <button v-if="!eventGoer[0]" class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend
+                    <i class="mdi mdi-human"></i></button>
                 </div>
               </div>
               <div v-else class="justify-content-end align-items-end d-flex flex-column">
@@ -39,16 +39,18 @@
       </div>
     </div>
 
-    <div class="container">
+
+    <div class="container mt-5">
       <div class="row">
-        <div class="col-12">
-          <div v-for="ticket in tickets">
-            <img class="img-fluid rounded-circle profile-img" :src="ticket.profile.picture" alt="" :title="ticket.profile.name">
+        <div class="col-12 d-flex bg-secondary">
+          <div v-for="ticket in tickets" class="p-1">
+            <img class="img-fluid rounded-circle profile-img" :src="ticket.profile.picture" alt=""
+              :title="ticket.profile.name">
           </div>
         </div>
       </div>
     </div>
-    
+
   </div>
   <div v-else>
     <div class="container-fluid" style="background-image: url({{  }});">
@@ -69,7 +71,7 @@ import { onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { eventsService } from '../services/EventsService';
 import { AppState } from '../AppState';
-import {ticketsService} from '../services/TicketsService'
+import { ticketsService } from '../services/TicketsService'
 import Pop from '../utils/Pop';
 import { logger } from '../utils/Logger';
 
@@ -94,12 +96,10 @@ export default {
       event: computed(() => AppState.activeEvent),
       tickets: computed(() => AppState.eventTickets),
       account: computed(() => AppState.account),
-      eventGoer: computed(() => {
-        AppState.eventTickets.find(e => e.accountId == AppState.acccount?.id)
-      }),
+      eventGoer: computed( () => AppState.eventTickets.filter(t => t.accountId == AppState.account.id)),
       // ticket: computed(() => AppState.)
 
-      async createTicket(eventId){
+      async createTicket(eventId) {
         try {
           await ticketsService.createTicket({ eventId })
         } catch (error) {
@@ -121,7 +121,7 @@ export default {
   background-position: center;
 }
 
-.profile-img{
-  height: 8vh;
+.profile-img {
+  height: 7vh;
 }
 </style>

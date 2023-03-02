@@ -5,24 +5,42 @@
         <img alt="logo" src="logo.png" height="45" />
       </div>
     </router-link>
-    
-    <div class="collapse navbar-collapse" id="navbarText">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarText"
+      aria-controls="navbarText"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse bg-dark" id="navbarText">
       <ul class="navbar-nav me-auto">
         <li>
-          
+          <button v-if="account.id" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#eventForm"> Create Event</button>
         </li>
       </ul>
       <!-- LOGIN COMPONENT HERE -->
       <Login />
     </div>
   </nav>
+
+  <Modal id="eventForm">
+    <EventForm />
+  </Modal>
 </template>
 
 <script>
+import { computed } from 'vue';
+import { AppState } from '../AppState';
 import Login from './Login.vue'
 export default {
   setup() {
-    return {}
+    return {
+      account: computed(() => AppState.account)
+    }
   },
   components: { Login }
 }

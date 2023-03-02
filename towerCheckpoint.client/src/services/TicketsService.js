@@ -8,10 +8,13 @@ class TicketsService{
         const res = await api.post('api/tickets', eventId)
         logger.log('data',res.data)
         AppState.activeEvent.capacity--
+        AppState.eventTickets.push(res.data)
     }
 
     async getPeoplesTickets(eventId) {
+        AppState.eventTickets = []
         const res = await api.get('api/events/' + eventId + '/tickets')
+        logger.log(res.data)
         AppState.eventTickets = res.data
         logger.log(AppState.eventTickets)
     }
