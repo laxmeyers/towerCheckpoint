@@ -16,7 +16,13 @@
               <div class="d-flex h-100 align-items-center">
                 <p>{{ event.description }}</p>
               </div>
-              <div v-if="event.capacity > 0" class="justify-content-end align-items-end d-flex flex-column">
+              <div v-if="!event.isCanceled" class="justify-content-end align-items-end d-flex flex-column">
+                <div class="d-flex justify-content-between w-100">
+                  <h5 class="mt-2">{{ event.capacity }} spots left</h5>
+                  <button class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend <i class="mdi mdi-human"></i></button>
+                </div>
+              </div>
+              <div v-else-if="event.capacity > 0 && !eventGoer" class="justify-content-end align-items-end d-flex flex-column">
                 <div class="d-flex justify-content-between w-100">
                   <h5 class="mt-2">{{ event.capacity }} spots left</h5>
                   <button class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend <i class="mdi mdi-human"></i></button>
@@ -32,6 +38,17 @@
         </div>
       </div>
     </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div v-for="ticket in tickets">
+            <img class="img-fluid rounded-circle profile-img" :src="ticket.profile.picture" alt="" :title="ticket.profile.name">
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </div>
   <div v-else>
     <div class="container-fluid" style="background-image: url({{  }});">
@@ -64,6 +81,7 @@ export default {
       try {
         const eventId = route.params.eventId
         await eventsService.getActiveEvent(eventId)
+        await ticketsService.getPeoplesTickets(eventId)
       } catch (error) {
         Pop.error(error, '[getting single event]')
       }
@@ -74,6 +92,11 @@ export default {
     })
     return {
       event: computed(() => AppState.activeEvent),
+      tickets: computed(() => AppState.eventTickets),
+      account: computed(() => AppState.account),
+      eventGoer: computed(() => {
+        AppState.eventTickets.find(e => e.accountId == AppState.acccount?.id)
+      }),
       // ticket: computed(() => AppState.)
 
       async createTicket(eventId){
@@ -96,5 +119,9 @@ export default {
 .bg-image {
   background-size: cover;
   background-position: center;
+}
+
+.profile-img{
+  height: 8vh;
 }
 </style>

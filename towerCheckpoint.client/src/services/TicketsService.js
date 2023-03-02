@@ -9,6 +9,12 @@ class TicketsService{
         logger.log('data',res.data)
         AppState.activeEvent.capacity--
     }
+
+    async getPeoplesTickets(eventId) {
+        const res = await api.get('api/events/' + eventId + '/tickets')
+        AppState.eventTickets = res.data
+        logger.log(AppState.eventTickets)
+    }
 }
 
 export const ticketsService = new TicketsService()
