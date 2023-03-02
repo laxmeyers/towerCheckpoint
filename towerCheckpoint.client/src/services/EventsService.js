@@ -21,6 +21,12 @@ class EventsService{
     async createEvent(formData) {
         const res = await api.post('api/events', formData)
         AppState.events.unshift(res.data)
+        AppState.activeEvent = res.data
+    }
+
+    async cancelEvent() {
+        const res = await api.delete('api/events/' + AppState.activeEvent.id)
+        AppState.activeEvent.isCanceled = true
     }
 }
 

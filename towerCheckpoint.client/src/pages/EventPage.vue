@@ -1,8 +1,8 @@
 <template>
   <div v-if="event.id">
-    <button v-if="account.id == event.creatorId"> delete</button>
     <div class="container-fluid bg-image" :style="{ 'background-image': 'url(' + event.coverImg + ')' }">
       <div class="row bg-opac">
+        <button v-if="account.id == event.creatorId && !event.isCanceled" class="btn btn-danger" @click="cancelEvent()">Cancel Event</button>
         <div class="col-12">
           <div class="row">
             <div class="col-md-5 my-3">
@@ -41,7 +41,7 @@
     </div>
 
 
-    <div class="container mt-5">
+    <div class="container my-5">
       <div class="row">
         <div class="col-12 d-flex bg-secondary">
           <div v-for="ticket in tickets" class="p-1">
@@ -74,7 +74,6 @@ import { eventsService } from '../services/EventsService';
 import { AppState } from '../AppState';
 import { ticketsService } from '../services/TicketsService'
 import Pop from '../utils/Pop';
-import { logger } from '../utils/Logger';
 
 export default {
   setup() {
@@ -98,13 +97,20 @@ export default {
       tickets: computed(() => AppState.eventTickets),
       account: computed(() => AppState.account),
       eventGoer: computed( () => AppState.eventTickets.filter(t => t.accountId == AppState.account.id)),
-      // ticket: computed(() => AppState.)
 
       async createTicket(eventId) {
         try {
           await ticketsService.createTicket({ eventId })
         } catch (error) {
           Pop.error(error, '[making a ticket]')
+        }
+      },
+
+      async cancelEvent() {
+        try {
+          await eventsService.cancelEvent()
+        } catch (error) {
+          Pop.error(error, '[canceling event]')
         }
       }
     }

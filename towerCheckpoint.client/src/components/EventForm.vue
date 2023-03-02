@@ -48,6 +48,8 @@
 
 <script>
 import { ref } from 'vue';
+import { AppState } from '../AppState';
+import { router } from '../router.js';
 import { eventsService } from '../services/EventsService';
 import Pop from '../utils/Pop';
 
@@ -63,6 +65,7 @@ export default {
                 try {
                     await eventsService.createEvent(editable.value)
                     editable.value = {}
+                    router.push({name: 'Event', params: {eventId: AppState.activeEvent.id}})
                 } catch (error) {
                     Pop.error(error, '[making new event]')
                 }
