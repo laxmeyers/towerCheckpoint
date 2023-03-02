@@ -2,9 +2,14 @@
   <div class="container" v-if="tickets[0]">
     <div class="row">
       <h1>Your Tickets</h1>
-      <div class="col-4 mb-3" v-for="t in tickets">
+      <div class="col-md-4 mb-3" v-for="t in tickets">
         <TicketCard :event="t.event" :ticket="t" />
       </div>
+    </div>
+  </div>
+  <div class="container" v-else>
+    <div class="row">
+      <h1>No tickets Yet! Go sign up for some events</h1>
     </div>
   </div>
 </template>
