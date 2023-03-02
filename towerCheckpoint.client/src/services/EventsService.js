@@ -1,14 +1,14 @@
 import { api } from "./AxiosService"
-import {AppState} from '../AppState'
+import { AppState } from '../AppState'
 import { logger } from "../utils/Logger"
 
-class EventsService{
+class EventsService {
     async getEvents() {
         const res = await api.get('api/events')
         logger.log(res.data)
         AppState.events = res.data
         logger.log(AppState.events)
-        
+
     }
 
     async getActiveEvent(eventId) {
@@ -32,6 +32,18 @@ class EventsService{
     async getComments(eventId) {
         const res = await api.get(`api/events/${eventId}/comments`)
         AppState.comments = res.data
+    }
+
+    async destroyComment(commentId) {
+        const res = await api.delete('api/comments/' + commentId)
+        const comment = AppState.comments.findIndex(c => c.id == commentId)
+
+        AppState.comments.splice(comment, 1)
+    }
+
+    async createComment(formData) {
+        const res = await api.post('api/comments', formData)
+        AppState.comments.unshift(res.data)
     }
 }
 

@@ -2,7 +2,8 @@
   <div v-if="event.id">
     <div class="container-fluid bg-image" :style="{ 'background-image': 'url(' + event.coverImg + ')' }">
       <div class="row bg-opac">
-        <button v-if="account.id == event.creatorId && !event.isCanceled" class="btn btn-danger" @click="cancelEvent()">Cancel Event</button>
+        <button v-if="account.id == event.creatorId && !event.isCanceled" class="btn btn-danger"
+          @click="cancelEvent()">Cancel Event</button>
         <div class="col-12">
           <div class="row">
             <div class="col-md-5 my-3">
@@ -53,17 +54,34 @@
     </div>
 
     <div class="container mb-5">
-      <div class="row">
-        <div class="col-10 bg-light border-bottom border-danger border-3" v-for="c in comments">
-          <div class="d-flex align-items-center p-2">
-            <div class="d-flex align-items-center">
-              <img class="img-fluid profile-img rounded-circle" :src="c.creator.picture" alt="" :title="c.creator.name">
-              <p class="m-0 ms-3 p-1 border border-dark border-1">{{ c.body }}</p>
-            </div>
-          </div>
+      <div class="row mb-2 justify-content-center">
+        <div class="col-10 text-end">
+          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#commentForm">Comment</button>
         </div>
       </div>
+      <div  class="row justify-content-center">
+        <div v-if="comments[0]" class="col-10 bg-light border-bottom border-danger border-3" v-for="c in comments">
+          <div class="d-flex align-items-center p-2 justify-content-between">
+            <div class="d-flex align-items-center w-100">
+              <img class="img-fluid profile-img rounded-circle" :src="c.creator.picture" alt="" :title="c.creator.name">
+              <p class="m-0 text-wrap ms-3 p-1 border border-dark border-1">{{ c.body }}</p>
+            </div>
+            <div v-if="c.creatorId == account.id"><i @click="destroycomment(c.id)"
+                class="mdi mdi-delete-outline text-danger selectable fs-3"></i></div>
+          </div>
+        </div>
+        <div v-else class="col-10 bg-light border-bottom border-danger border-3">
+          <h5>There are no comments.</h5>
+          <h5>Be the first To make a comment.</h5>
+        </div>
+      </div>
+      <div  class="row justify-content-center">
+      </div>
     </div>
+
+    <Modal id="commentForm">
+      <CommentForm />
+    </Modal>
 
   </div>
   <div v-else>
@@ -87,49 +105,61 @@ import { eventsService } from '../services/EventsService';
 import { AppState } from '../AppState';
 import { ticketsService } from '../services/TicketsService'
 import Pop from '../utils/Pop';
+import Modal from '../components/Modal.vue';
+import CommentForm from '../components/CommentForm.vue';
 
 export default {
   setup() {
-    const route = useRoute()
-
+    const route = useRoute();
     async function getActiveEvent() {
       try {
-        const eventId = route.params.eventId
-        await eventsService.getActiveEvent(eventId)
-        await ticketsService.getPeoplesTickets(eventId)
-        await eventsService.getComments(eventId)
-      } catch (error) {
-        Pop.error(error, '[getting single event]')
+        const eventId = route.params.eventId;
+        await eventsService.getActiveEvent(eventId);
+        await ticketsService.getPeoplesTickets(eventId);
+        await eventsService.getComments(eventId);
+      }
+      catch (error) {
+        Pop.error(error, "[getting single event]");
       }
     }
-
     onMounted(() => {
-      getActiveEvent()
-    })
+      getActiveEvent();
+    });
     return {
       event: computed(() => AppState.activeEvent),
       tickets: computed(() => AppState.eventTickets),
       account: computed(() => AppState.account),
       eventGoer: computed(() => AppState.eventTickets.filter(t => t.accountId == AppState.account.id)),
       comments: computed(() => AppState.comments),
-
       async createTicket(eventId) {
         try {
-          await ticketsService.createTicket({ eventId })
-        } catch (error) {
-          Pop.error(error, '[making a ticket]')
+          await ticketsService.createTicket({ eventId });
+        }
+        catch (error) {
+          Pop.error(error, "[making a ticket]");
         }
       },
-
       async cancelEvent() {
         try {
-          await eventsService.cancelEvent()
-        } catch (error) {
-          Pop.error(error, '[canceling event]')
+          await eventsService.cancelEvent();
+        }
+        catch (error) {
+          Pop.error(error, "[canceling event]");
+        }
+      },
+      async destroycomment(commentId) {
+        try {
+          if (await Pop.confirm("You sure?"))
+            await eventsService.destroyComment(commentId);
+          Pop.success("comment deleted");
+        }
+        catch (error) {
+          Pop.error(error, "[deleting comment]");
         }
       }
-    }
-  }
+    };
+  },
+  components: { Modal, CommentForm }
 }
 </script>
 
@@ -145,5 +175,10 @@ export default {
 
 .profile-img {
   height: 7vh;
+}
+
+.text-wrap{
+  inline-size: 50vw;
+  overflow-wrap: break-word;
 }
 </style>

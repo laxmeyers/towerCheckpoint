@@ -64,7 +64,7 @@ export default {
             async createEvent() {
                 try {
                     await eventsService.createEvent(editable.value)
-                    editable.value = {}
+                    editable.value = { type: 'concert'}
                     router.push({name: 'Event', params: {eventId: AppState.activeEvent.id}})
                 } catch (error) {
                     Pop.error(error, '[making new event]')

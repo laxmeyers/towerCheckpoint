@@ -2,7 +2,7 @@
   <div class="container-fluid  mb-5">
     <div class="row align-items-center mb-5 chairs-pic">
       <div class="col-4 offset-1 text-light">
-        <h1 class="fs-4">Get ahead of the scalpers. Reserve your seat now with real events for real people.</h1>
+        <h1 class="fs-4 text-shadow">Get ahead of the scalpers. Reserve your seat now with real events for real people.</h1>
       </div>
     </div>
     <div class="row justify-content-center mb-5">
@@ -71,5 +71,9 @@ export default {
   background-size: cover;
   height: 30vh;
   background-position: center;
+}
+
+.text-shadow{
+  text-shadow: 1px 1px 1px bisque;
 }
 </style>
