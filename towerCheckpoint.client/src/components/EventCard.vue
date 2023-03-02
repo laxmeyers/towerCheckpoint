@@ -6,7 +6,7 @@
                 <div class="text-limit align-items-center d-flex"><h5 class="fs-5">{{ event.name }}</h5></div>
                 <div class="text-limit">{{ event.description }}</div>
                 <div class="mt-1">{{ new Date(event.startDate).toLocaleDateString() }}</div>
-                <div v-if="event.isCanceled" class="bg-danger w-100 rounded text-center">
+                <div v-if="event.isCanceled" class="bg-danger w-100 rounded">
                     <small >Event Is Canceled</small>
                 </div>
                 <div class="text-end mt-1" v-else-if="event.capacity > 0">
