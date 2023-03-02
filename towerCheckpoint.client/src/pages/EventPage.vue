@@ -1,5 +1,6 @@
 <template>
   <div v-if="event.id">
+    <button v-if="account.id == event.creatorId"> delete</button>
     <div class="container-fluid bg-image" :style="{ 'background-image': 'url(' + event.coverImg + ')' }">
       <div class="row bg-opac">
         <div class="col-12">
