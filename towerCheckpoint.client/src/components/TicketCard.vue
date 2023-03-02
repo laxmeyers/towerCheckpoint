@@ -33,7 +33,10 @@ export default {
         return {
             async destroyTicket(ticketId) {
                 try {
-                    await ticketsService.destroyTicket(ticketId)
+                    if (await Pop.confirm('are you sure?')) {
+                        await ticketsService.destroyTicket(ticketId)
+                        Pop.success('Ticket Removed')
+                    }
                 } catch (error) {
                     Pop.error(error, '[deleting ticket]')
                 }

@@ -26,7 +26,7 @@
               <div v-else-if="event.capacity > 0" class="justify-content-end align-items-end d-flex flex-column">
                 <div class="d-flex justify-content-between w-100">
                   <h5 class="mt-2">{{ event.capacity }} spots left</h5>
-                  <button v-if="!eventGoer[0]" class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend
+                  <button v-if="!eventGoer[0] && account.id" class="btn btn-warning me-5 mb-3" @click="createTicket(event.id)"> Attend
                     <i class="mdi mdi-human"></i></button>
                 </div>
               </div>
@@ -43,7 +43,7 @@
 
 
     <div class="container my-5">
-      <div class="row">
+      <div class="row" v-if="tickets[0]">
         <div class="col-12 d-flex bg-secondary">
           <div v-for="ticket in tickets" class="p-1">
             <img class="img-fluid rounded-circle profile-img" :src="ticket.profile.picture" alt=""
@@ -51,10 +51,15 @@
           </div>
         </div>
       </div>
+      <div class="row" v-else>
+        <div class="col-12 d-flex bg-secondary">
+          <h1>There is no one attending this event yet...</h1>
+        </div>
+      </div>
     </div>
 
     <div class="container mb-5">
-      <div class="row mb-2 justify-content-center">
+      <div class="row mb-2 justify-content-center" v-if="account.id">
         <div class="col-10 text-end">
           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#commentForm">Comment</button>
         </div>
@@ -141,7 +146,10 @@ export default {
       },
       async cancelEvent() {
         try {
-          await eventsService.cancelEvent();
+          if (await Pop.confirm('Are You sure you want to?')) {
+            await eventsService.cancelEvent();
+            Pop.success('Event canceled')
+          }
         }
         catch (error) {
           Pop.error(error, "[canceling event]");
@@ -149,9 +157,10 @@ export default {
       },
       async destroycomment(commentId) {
         try {
-          if (await Pop.confirm("You sure?"))
+          if (await Pop.confirm("You sure?")) {
             await eventsService.destroyComment(commentId);
-          Pop.success("comment deleted");
+            Pop.success("comment deleted");
+          }
         }
         catch (error) {
           Pop.error(error, "[deleting comment]");
