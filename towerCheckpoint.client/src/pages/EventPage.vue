@@ -52,6 +52,19 @@
       </div>
     </div>
 
+    <div class="container mb-5">
+      <div class="row">
+        <div class="col-10 bg-light border-bottom border-danger border-3" v-for="c in comments">
+          <div class="d-flex align-items-center p-2">
+            <div class="d-flex align-items-center">
+              <img class="img-fluid profile-img rounded-circle" :src="c.creator.picture" alt="" :title="c.creator.name">
+              <p class="m-0 ms-3 p-1 border border-dark border-1">{{ c.body }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div v-else>
     <div class="container-fluid" style="background-image: url({{  }});">
@@ -84,6 +97,7 @@ export default {
         const eventId = route.params.eventId
         await eventsService.getActiveEvent(eventId)
         await ticketsService.getPeoplesTickets(eventId)
+        await eventsService.getComments(eventId)
       } catch (error) {
         Pop.error(error, '[getting single event]')
       }
@@ -96,7 +110,8 @@ export default {
       event: computed(() => AppState.activeEvent),
       tickets: computed(() => AppState.eventTickets),
       account: computed(() => AppState.account),
-      eventGoer: computed( () => AppState.eventTickets.filter(t => t.accountId == AppState.account.id)),
+      eventGoer: computed(() => AppState.eventTickets.filter(t => t.accountId == AppState.account.id)),
+      comments: computed(() => AppState.comments),
 
       async createTicket(eventId) {
         try {
