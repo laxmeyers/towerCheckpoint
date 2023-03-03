@@ -6,7 +6,7 @@
         </div>
         <div class="modal-body">
             <div class="form-floating mb-3 text-dark">
-                <textarea required v-model="editable.body" class="form-control" placeholder="Leave a comment here" minlength="3" maxlength="500" id="floatingTextarea"></textarea>
+                <textarea required v-model="editable.body" class="form-control" placeholder="Leave a comment here" minlength="3" maxlength="5000" id="floatingTextarea"></textarea>
                 <label for="floatingTextarea">Message</label>
             </div>
         </div>

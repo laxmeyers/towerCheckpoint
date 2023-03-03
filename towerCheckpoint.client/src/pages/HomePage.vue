@@ -49,9 +49,10 @@ export default {
         return {
           events: computed(() => {
             if (!filterCategory.value) {
-              return AppState.events
+              return AppState.events.filter(e => new Date(e.startDate) >= new Date())
             } else {
-              return AppState.events.filter(e => e.type == filterCategory.value)
+              const event = AppState.events.filter(e => e.type == filterCategory.value)
+              return event.filter(e => new Date(e.startDate) >= new Date())
             }
           }),
           

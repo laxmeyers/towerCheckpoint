@@ -7,24 +7,24 @@
         <div class="modal-body">
             <div class="mb-3">
                 <label for="name" class="form-label">Title</label>
-                <input v-model="editable.name" required type="text" class="form-control" id="name"
+                <input v-model="editable.name" required type="text" class="form-control" minlength="3" maxLength="500" id="name"
                     aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input v-model="editable.location" type="text" class="form-control" id="location" required>
+                <input v-model="editable.location" type="text" maxlength="500" class="form-control" id="location" required>
             </div>
             <div class="mb-3">
                 <label for="capacity" class="form-label">Capacity</label>
-                <input v-model="editable.capacity" required type="number" class="form-control" id="capacity">
+                <input v-model="editable.capacity" max="10000" required type="number" class="form-control" id="capacity">
             </div>
             <div class="mb-3">
                 <label for="StartDate" class="form-label">Start Date</label>
-                <input v-model="editable.startDate" required type="date" class="form-control" id="StartDate">
+                <input :min="new Date().toLocaleDateString('fr-ca')"  v-model="editable.startDate" required type="date" class="form-control" id="StartDate">
             </div>
             <div class="mb-3">
                 <label for="coverImg" class="form-label">Cover Image</label>
-                <input v-model="editable.coverImg" required type="url" class="form-control" id="coverImg">
+                <input maxlength="2000" v-model="editable.coverImg" required type="url" class="form-control" id="coverImg">
             </div>
             <div class="form-floating mb-3">
                 <textarea required v-model="editable.description" class="form-control" placeholder="Leave a comment here" minlength="3" maxlength="5000" id="floatingTextarea"></textarea>
