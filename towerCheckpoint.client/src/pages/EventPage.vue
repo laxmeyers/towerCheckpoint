@@ -1,8 +1,8 @@
 <template>
   <div v-if="event.id">
     <div class="container-fluid bg-image" :style="{ 'background-image': 'url(' + event.coverImg + ')' }">
-      <div class="row bg-opac">
-        <button v-if="account.id == event.creatorId && !event.isCanceled" class="btn btn-danger"
+      <div class="row" :class="event.isCanceled ? 'bg-red' : 'bg-opac'">
+        <button v-if="account.id == event.creatorId && !event.isCanceled" class="btn btn-info"
           @click="cancelEvent()">Cancel Event</button>
         <div class="col-12">
           <div class="row">
@@ -15,7 +15,7 @@
                 <h3 class="fs-5">{{ new Date(event.startDate).toLocaleDateString() }}</h3>
               </div>
               <h4>{{ event.location }}</h4>
-              <div class="d-flex h-100 align-items-center">
+              <div class="d-flex h-100 align-items-center bg-see">
                 <p>{{ event.description }}</p>
               </div>
               <div v-if="event.isCanceled" class="justify-content-end align-items-end d-flex flex-column">
@@ -173,6 +173,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.bg-red{
+  background-color: rgba(114, 0, 0, 0.363);
+}
 .bg-opac {
   background-color: rgba(0, 0, 255, 0.651);
 }
@@ -189,5 +192,9 @@ export default {
 .text-wrap{
   inline-size: 50vw;
   overflow-wrap: break-word;
+}
+
+.bg-see{
+  text-shadow: 2px 1px black;
 }
 </style>
