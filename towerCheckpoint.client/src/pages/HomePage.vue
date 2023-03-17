@@ -68,7 +68,7 @@ export default {
 
 <style scoped lang="scss">
 .chairs-pic {
-  background-image: url(chairs.png);
+  background-image: url(/chairs.png);
   background-size: cover;
   height: 30vh;
   background-position: center;
