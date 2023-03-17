@@ -2,7 +2,8 @@
   <div class="container-fluid  mb-5">
     <div class="row align-items-center mb-5 chairs-pic">
       <div class="col-4 offset-1 text-light">
-        <h1 class="fs-4 text-shadow">Get ahead of the scalpers. Reserve your seat now with real events for real people.</h1>
+        <h1 class="fs-4 text-shadow">Get ahead of the scalpers. Reserve your seat now with real events for real people.
+        </h1>
       </div>
     </div>
     <div class="row justify-content-center mb-5">
@@ -19,7 +20,7 @@
   <div class="container">
     <div class="row">
       <div v-for="event in events" class="col-md-3 my-3">
-       <EventCard :event="event" />
+        <EventCard :event="event" />
       </div>
     </div>
   </div>
@@ -34,47 +35,47 @@ import EventCard from '../components/EventCard.vue';
 
 export default {
   setup() {
-      const filterCategory = ref('')
-        async function getEvents() {
-            try {
-                await eventsService.getEvents();
-            }
-            catch (error) {
-                Pop.error(error, "[geting events]");
-            }
+    const filterCategory = ref('')
+    async function getEvents() {
+      try {
+        await eventsService.getEvents();
+      }
+      catch (error) {
+        Pop.error(error, "[geting events]");
+      }
+    }
+    onMounted(() => {
+      getEvents();
+    });
+    return {
+      events: computed(() => {
+        if (!filterCategory.value) {
+          return AppState.events.filter(e => new Date(e.startDate) >= new Date())
+        } else {
+          const event = AppState.events.filter(e => e.type == filterCategory.value)
+          return event.filter(e => new Date(e.startDate) >= new Date())
         }
-        onMounted(() => {
-            getEvents();
-        });
-        return {
-          events: computed(() => {
-            if (!filterCategory.value) {
-              return AppState.events.filter(e => new Date(e.startDate) >= new Date())
-            } else {
-              const event = AppState.events.filter(e => e.type == filterCategory.value)
-              return event.filter(e => new Date(e.startDate) >= new Date())
-            }
-          }),
-          
+      }),
 
-          changeFilterCategory(category) {
-            filterCategory.value = category
-          }
-        };
-    },
-    components: { EventCard }
+
+      changeFilterCategory(category) {
+        filterCategory.value = category
+      }
+    };
+  },
+  components: { EventCard }
 }
 </script>
 
 <style scoped lang="scss">
 .chairs-pic {
-  background-image: url(/chairs.png);
+  background-image: url('/chairs.png');
   background-size: cover;
   height: 30vh;
   background-position: center;
 }
 
-.text-shadow{
+.text-shadow {
   text-shadow: 1px 1px 1px bisque;
 }
 </style>
